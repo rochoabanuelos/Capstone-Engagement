@@ -8,7 +8,7 @@ Assessment, Analysis, and Hardening of a Vulnerable System
 ## Red Team Penetration Test
 ------
 Network scan to discover target IP
-'netdiscover -r 192.168.1.0/24'
+`netdiscover -r 192.168.1.0/24`
 
 | Machine               |     IP        |
 | --------------------- |:-------------:|
@@ -18,7 +18,7 @@ Network scan to discover target IP
 | ELK Server            | 192.168.1.100 |
 
 ## Simple scan for open ports
-'nmap 192.168.1.105'
+`nmap 192.168.1.105`
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/6.PNG)
 
 | Port      | Service  |
