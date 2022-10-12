@@ -18,7 +18,7 @@ Network scan to discover target IP
 | Capstone (Target)     | 192.168.1.105 |
 | ELK Server            | 192.168.1.100 |
 
-## Simple scan for open ports
+## Scanning for open ports
 `nmap 192.168.1.105`
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/6.PNG)
