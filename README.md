@@ -8,6 +8,7 @@ Assessment, Analysis, and Hardening of a Vulnerable System
 ## Red Team Penetration Test
 ------
 Network scan to discover target IP
+
 `netdiscover -r 192.168.1.0/24`
 
 | Machine               |     IP        |
