@@ -2,11 +2,11 @@
 Assessment, Analysis, and Hardening of a Vulnerable System
 
 ## Network Topology
-------
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED%20VS%20BLUE%20NETWORK.png)
 
 ## Red Team Penetration Test
-------
+
 Network scan to discover target IP
 
 `netdiscover -r 192.168.1.0/24`
@@ -61,7 +61,9 @@ Before launching any attacks, I wanted to perform a vulnerability scan to identi
   * CVE-2017-15710 – Apache httpd vulnerability
   
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/25.png)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/26.png)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/27.png)
 
 ## Launching Brute Force Attack
@@ -86,6 +88,7 @@ Once logged in I notice something sitting in the *home* directory.
 Once I gain access, I click on the file *connect_to_corp_server* to look at the contents. The file contains the step-by-step instructions to connect to server and Ryan's password *hash*.
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/11.PNG)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/12.PNG)
 
 I take the md5 hash and crack it using a free online tool named *Crackstation*. 
@@ -128,10 +131,12 @@ I switch back to Metasploit to confirm connection and that a Meterpreter session
 
 ### Flag2
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/20.PNG)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/21.PNG)
 
 ## Exfiltration
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/30.png)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/31.png)
 
 ## Vulnerabilities
@@ -234,7 +239,6 @@ https://cwe.mitre.org/data/definitions/521.html
 ------
 
 # Blue Team
-------
 
 ## Identifying the port scan
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/Connections%20Overtime.PNG)
@@ -250,7 +254,11 @@ https://cwe.mitre.org/data/definitions/521.html
 ## Recommended Alarms and Mitigation Strategies
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/mit1.PNG)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/mit2.PNG)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/mit3.PNG)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/mit4.PNG)
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/mit5.PNG)
