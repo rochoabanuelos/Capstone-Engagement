@@ -20,6 +20,7 @@ Network scan to discover target IP
 
 ## Simple scan for open ports
 `nmap 192.168.1.105`
+
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/6.PNG)
 
 | Port      | Service  |
@@ -28,7 +29,8 @@ Network scan to discover target IP
 | 80        | http     |
 
 ## Agressive scan for more information
-'nmap -vvv 192.168.1.105'
+`nmap -vvv 192.168.1.105`
+
 Output shows a webserver directory with interesting files listed such as *ashton* and *hannah* text files.
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/22.png)
 
